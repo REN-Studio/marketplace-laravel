@@ -12,7 +12,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $limit = request()->query("limit");
+        $keyword = request()->query("keyword");
+        $productKeyword = request()->query("product_key");
+        $products = Product::where("stock", ">", "%{$keyword}%")->where("name", "like", "%{$productKeyword}%")->paginate($limit);
         return response()->json(['products' => $products]);
     }
 
