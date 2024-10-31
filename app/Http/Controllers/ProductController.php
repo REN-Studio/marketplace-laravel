@@ -12,10 +12,15 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $limit = request()->query("limit");
-        $keyword = request()->query("keyword");
-        $productKeyword = request()->query("product_key");
-        $products = Product::where("stock", ">", "%{$keyword}%")->where("name", "like", "%{$productKeyword}%")->paginate($limit);
+        $limit = request()->query("limit", 5);
+        $keyword = request()->query("keyword", 0);
+        $productKeyword = request()->query("product_key", "");
+        $urutan = request()->query("urutan", "asc");
+        // $products = Product::->paginate($limit);
+        $products = Product::where("stock", ">", $keyword)
+            ->where("name", "like", "%{$productKeyword}%")
+            ->orderBy('name', $urutan)
+            ->paginate($limit);
         return response()->json(['products' => $products]);
     }
 
