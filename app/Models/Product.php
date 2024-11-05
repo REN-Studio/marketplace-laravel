@@ -10,4 +10,8 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'price', 'stock'];
+
+    public function reviews(){
+        return $this->hasMany(Review::class);
+    }
 }
