@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ReviewProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,3 +40,7 @@ Route::middleware('auth:sanctum')->group(function (){
 
     Route::delete('logout', [LogoutController::class, 'logout']);
 });
+
+Route::post('products/{product}/reviews', [ReviewProductController::class, 'store']);
+Route::get('products/{product}/reviews', [ReviewProductController::class, 'index']);
+Route::delete('products/{product}/reviews/{review}', [ReviewProductController::class, 'destroy']);
