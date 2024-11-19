@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ListProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -17,11 +18,13 @@ class ProductController extends Controller
         $productKeyword = request()->query("product_key", "");
         $urutan = request()->query("urutan", "asc");
         // $products = Product::->paginate($limit);
-        $products = Product::where("stock", ">", $keyword)
+        $products = Product::with("brand", "category")
+            ->where("stock", ">", $keyword)
             ->where("name", "like", "%{$productKeyword}%")
             ->orderBy('name', $urutan)
             ->paginate($limit);
-        return response()->json(['products' => $products]);
+
+        return ListProductResource::collection($products);
     }
 
     /**
@@ -30,13 +33,19 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:8',
+            'brand_id' => 'required|integer',
+            'category_id' => 'required|integer',
+            'name' => 'required|string|max:20',
             'price' => 'required|integer',
             'stock' => 'required|integer'
         ], [
+            'brand_id.required' => 'Id brand produk wajib diisi.',
+            'brand_id.integer' => 'Id brand produk harus berupa integer.',
+            'category_id.required' => 'Id category produk wajib diisi.',
+            'category_id.integer' => 'Id category produk harus berupa integer.',
             'name.required' => 'Nama produk wajib diisi.',
             'name.string' => 'Nama produk harus berupa string.',
-            'name.max' => 'Nama produk tidak boleh lebih dari 8 karakter.',
+            'name.max' => 'Nama produk tidak boleh lebih dari 20 karakter.',
             'price.required' => 'Harga produk wajib diisi.',
             'price.integer' => 'Harga produk harus berupa angka.',
             'stock.required' => 'Stok produk wajib diisi.',
@@ -44,7 +53,9 @@ class ProductController extends Controller
         ]);
         
         $product = Product::create($validatedData);
-        return response()->json(['message' => 'Produk berhasil ditambahkan', 'product' =>$product]);
+        $product->loadMissing("brand", "category");
+        
+        return ListProductResource::make($product);
     }
 
     /**

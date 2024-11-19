@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use Illuminate\Http\Request;
@@ -7,6 +9,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ReviewProductController;
+use App\Models\Brand;
+use App\Models\Category;
+use Database\Seeders\ProductsTableSeeder;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,4 +48,15 @@ Route::middleware('auth:sanctum')->group(function (){
 
 Route::post('products/{product}/reviews', [ReviewProductController::class, 'store']);
 Route::get('products/{product}/reviews', [ReviewProductController::class, 'index']);
+Route::put('products/{product}/reviews/{review}', [ReviewProductController::class, 'update']);
 Route::delete('products/{product}/reviews/{review}', [ReviewProductController::class, 'destroy']);
+
+Route::get('brands', [BrandController::class, 'index']);
+Route::post('brands', [BrandController::class, 'store']);
+Route::put('brands/{brand}', [BrandController::class, 'update']);
+Route::delete('brands/{brand}', [BrandController::class, 'destroy']);
+
+Route::post('categories', [CategoryController::class, 'store']);
+Route::get('categories', [CategoryController::class, 'index']);
+Route::put('categories/{category}', [CategoryController::class, 'update']);
+Route::delete('categories/{category}', [CategoryController::class, 'destroy']);
