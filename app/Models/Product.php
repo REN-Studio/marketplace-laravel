@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $fillable = ['brand_id', 'category_id', 'name', 'price', 'stock'];
+    protected $fillable = ['brand_id', 'category_id','supplier_id', 'name', 'price', 'stock'];
 
     public function reviews(){
         return $this->hasMany(Review::class);
@@ -21,5 +22,9 @@ class Product extends Model
 
     public function category(){
         return $this->belongsTo(Category::class);
+    }
+
+    public function supplier(){
+        return $this->belongsTo(Supplier::class);
     }
 }

@@ -4,14 +4,19 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ReviewProductController;
+use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\SupplierController;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Shipping;
 use Database\Seeders\ProductsTableSeeder;
+use Hamcrest\Number\OrderingComparison;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,3 +65,15 @@ Route::post('categories', [CategoryController::class, 'store']);
 Route::get('categories', [CategoryController::class, 'index']);
 Route::put('categories/{category}', [CategoryController::class, 'update']);
 Route::delete('categories/{category}', [CategoryController::class, 'destroy']);
+
+Route::get('suppliers', [SupplierController::class, 'index']);
+Route::post('suppliers', [SupplierController::class, 'store']);
+Route::put('suppliers/{supplier}', [SupplierController::class, 'update']);
+Route::delete('suppliers/{supplier}', [SupplierController::class, 'destroy']);
+
+Route::post('orders', [OrderController::class, 'store']);
+Route::get('orders', [OrderController::class, 'index']);
+Route::put('orders/{order}', [OrderController::class, 'update']);
+Route::delete('orders/{order}', [OrderController::class, 'destroy']);
+
+Route::post('shippings', [ShippingController::class, 'store']);

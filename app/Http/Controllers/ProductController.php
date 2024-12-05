@@ -18,7 +18,7 @@ class ProductController extends Controller
         $productKeyword = request()->query("product_key", "");
         $urutan = request()->query("urutan", "asc");
         // $products = Product::->paginate($limit);
-        $products = Product::with("brand", "category")
+        $products = Product::with("brand", "category", "supplier")
             ->where("stock", ">", $keyword)
             ->where("name", "like", "%{$productKeyword}%")
             ->orderBy('name', $urutan)
@@ -35,6 +35,7 @@ class ProductController extends Controller
         $validatedData = $request->validate([
             'brand_id' => 'required|integer',
             'category_id' => 'required|integer',
+            'supplier_id' => 'required|integer',
             'name' => 'required|string|max:20',
             'price' => 'required|integer',
             'stock' => 'required|integer'
@@ -43,6 +44,8 @@ class ProductController extends Controller
             'brand_id.integer' => 'Id brand produk harus berupa integer.',
             'category_id.required' => 'Id category produk wajib diisi.',
             'category_id.integer' => 'Id category produk harus berupa integer.',
+            'supplier_id.required' => 'Id supplier produk wajib diisi.',
+            'supplier_id.integer' => 'Id supplier produk harus berupa integer.',
             'name.required' => 'Nama produk wajib diisi.',
             'name.string' => 'Nama produk harus berupa string.',
             'name.max' => 'Nama produk tidak boleh lebih dari 20 karakter.',
@@ -53,7 +56,7 @@ class ProductController extends Controller
         ]);
         
         $product = Product::create($validatedData);
-        $product->loadMissing("brand", "category");
+        $product->loadMissing("brand", "category", "supplier");
         
         return ListProductResource::make($product);
     }
@@ -95,6 +98,8 @@ class ProductController extends Controller
         // $product->update($validatedData);
         // $updatedProduct = Product::find($id);
         // return response()->json(['message' => 'Produk berhasil diupdate', 'product' => $updatedProduct]);
+
+
     }
 
     /**
